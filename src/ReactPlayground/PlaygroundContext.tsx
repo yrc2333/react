@@ -22,9 +22,7 @@ export interface PlaygroundContext {
   updateFileName: (oldFieldName: string, newFieldName: string) => void
 }
 
-export const PlaygroundContext = createContext<PlaygroundContext>({
-  selectedFileName: 'App.tsx',
-} as PlaygroundContext)
+export const PlaygroundContext = createContext({} as PlaygroundContext)
 
 export const PlaygroundProvider = (props: PropsWithChildren) => {
   const { children } = props
