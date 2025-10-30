@@ -17,6 +17,7 @@ export const ENTRY_FILE_NAME = 'main.tsx'
 export const initFiles: Files = {
   [ENTRY_FILE_NAME]: {
     name: ENTRY_FILE_NAME,
+    readOnly: true,
     language: fileName2Language(ENTRY_FILE_NAME),
     value: main,
   },
@@ -34,6 +35,7 @@ export const initFiles: Files = {
 
   [IMPORT_MAP_FILE_NAME]: {
     name: IMPORT_MAP_FILE_NAME,
+    readOnly: true,
     language: fileName2Language(IMPORT_MAP_FILE_NAME),
     value: importMap,
   },

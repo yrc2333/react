@@ -4,6 +4,7 @@ import { initFiles } from './files'
 
 export interface File {
   name: string
+  readOnly?: boolean
   value?: string
   language: string
 }
@@ -18,7 +19,7 @@ export interface PlaygroundContext {
   setSelectedFileName: (fileName: string) => void
   setFiles: (files: Files) => void
   addFile: (fileName: string) => void
-  removeFile: (fileName: string) => void
+  removeFile: (fileName?: string) => void
   updateFileName: (oldFieldName: string, newFieldName: string) => void
 }
 
@@ -52,18 +53,8 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
       newFieldName === null
     )
       return
-    const { [oldFieldName]: value, ...rest } = files
-    const newFile = {
-      [newFieldName]: {
-        ...value,
-        language: fileName2Language(newFieldName),
-        name: newFieldName,
-      },
-    }
-    setFiles({
-      ...rest,
-      ...newFile,
-    })
+
+    setFiles(renameKey(files, oldFieldName, newFieldName))
   }
 
   return (
@@ -80,4 +71,20 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
       {children}
     </PlaygroundContext.Provider>
   )
+}
+
+function renameKey(obj: Record<string, any>, oldKey: string, newKey: string) {
+  const result: Record<string, any> = {}
+
+  Object.keys(obj).forEach((key) => {
+    if (key === oldKey) {
+      result[newKey] = obj[key]
+    } else {
+      result[key] = obj[key]
+    }
+  })
+
+  console.log('🚀 ~ renameKey ~ result:', result)
+
+  return result
 }
