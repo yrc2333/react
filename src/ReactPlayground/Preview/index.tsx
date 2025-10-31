@@ -1,8 +1,15 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { PlaygroundContext } from '../PlaygroundContext'
-import { compile } from './compiler'
+import CompilerWorker from './compiler.worker?worker'
 import iframeRaw from './iframe.html?raw'
 import { IMPORT_MAP_FILE_NAME } from '../files'
+
+interface MessageData {
+  data: {
+    type: string
+    message: string
+  }
+}
 
 export function Preview() {
   const { files } = useContext(PlaygroundContext)
@@ -23,10 +30,24 @@ export function Preview() {
 
   const [iframeUrl, setIframeUrl] = useState(getIframeUrl())
 
+  const compilerWorkerRef = useRef<Worker>(null)
+
   useEffect(() => {
-    const code = compile(files)
-    console.log('🚀 ~ Preview ~ code:', code)
-    setCompiledCode(code)
+    if (!compilerWorkerRef.current) {
+      compilerWorkerRef.current = new CompilerWorker()
+      compilerWorkerRef.current!.addEventListener('message', ({ data }) => {
+        console.log('worker', data)
+        if (data.type === 'COMPILED_CODE') {
+          setCompiledCode(data.data)
+        } else {
+          //console.log('error', data);
+        }
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    compilerWorkerRef.current?.postMessage(files)
   }, [files])
 
   useEffect(() => {

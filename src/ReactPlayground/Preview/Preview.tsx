@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react'
 import { PlaygroundContext } from '../PlaygroundContext'
 
-import { compile } from './compiler'
+import { compile } from './compiler.worker'
 
 export function Preview() {
   const { files, selectedFileName } = useContext(PlaygroundContext)

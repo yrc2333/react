@@ -1,11 +1,16 @@
-import React, { createContext, PropsWithChildren, useState } from 'react'
-import { fileName2Language } from './utils'
+import React, {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react'
+import { fileName2Language, compress, uncompress } from './utils'
 import { initFiles } from './files'
 
 export interface File {
   name: string
   readOnly?: boolean
-  value?: string
+  value: string
   language: string
 }
 
@@ -27,8 +32,13 @@ export const PlaygroundContext = createContext({} as PlaygroundContext)
 
 export const PlaygroundProvider = (props: PropsWithChildren) => {
   const { children } = props
-  const [files, setFiles] = useState<Files>(initFiles)
+  const [files, setFiles] = useState<Files>(getFilesFromHash() || initFiles)
   const [selectedFileName, setSelectedFileName] = useState('App.tsx')
+
+  useEffect(() => {
+    const hash = JSON.stringify(files)
+    window.location.hash = compress(hash)
+  }, [files])
 
   const addFile = (fileName?: string) => {
     const name = fileName || `File${Object.keys(files).length + 1}.tsx`
@@ -99,4 +109,10 @@ function renameKey(obj: Record<string, any>, oldKey: string, newKey: string) {
   console.log('🚀 ~ renameKey ~ result:', result)
 
   return result
+}
+
+function getFilesFromHash() {
+  const hash = window.location.hash.slice(1)
+  if (!hash) return
+  return JSON.parse(uncompress(hash))
 }
