@@ -36,7 +36,7 @@ export function FileNameList() {
       ))}
 
       <div
-        className="h-full flex  items-center p-3 cursor-pointer hover:text-blue-500"
+        className="h-full flex px-2 items-center cursor-pointer hover:text-blue-500"
         onClick={() => addFile()}>
         +
       </div>
@@ -100,17 +100,19 @@ function FileNameListItem(props: FileNameListItemProps) {
       ) : (
         <>
           {fileName}
-          <span
-            style={{ marginLeft: 5, display: 'flex' }}
-            onClick={(e) => {
-              e.stopPropagation()
-              !readonly && onRemove && onRemove()
-            }}>
-            <svg width="12" height="12" viewBox="0 0 24 24">
-              <line stroke="#999" x1="18" y1="6" x2="6" y2="18"></line>
-              <line stroke="#999" x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </span>
+          {!readonly && (
+            <span
+              style={{ marginLeft: 5, display: 'flex' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onRemove && onRemove()
+              }}>
+              <svg width="12" height="12" viewBox="0 0 24 24">
+                <line stroke="#999" x1="18" y1="6" x2="6" y2="18"></line>
+                <line stroke="#999" x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </span>
+          )}
         </>
       )}
     </div>
