@@ -8,6 +8,7 @@ export function FileNameList() {
     updateFileName,
     setSelectedFileName,
     removeFile,
+    addFile,
     selectedFileName,
   } = useContext(PlaygroundContext)
 
@@ -26,13 +27,19 @@ export function FileNameList() {
           onClick={() => {
             setSelectedFileName(item)
           }}
-          readonly={files[item].readOnly}
+          readonly={files[item]?.readOnly}
           onRemove={() => removeFile(item)}
           onEditEnd={(value) => {
             updateFileName(item, value)
             setSelectedFileName(value)
           }}></FileNameListItem>
       ))}
+
+      <div
+        className="h-full flex  items-center p-3 cursor-pointer hover:text-blue-500"
+        onClick={() => addFile()}>
+        +
+      </div>
     </div>
   )
 }

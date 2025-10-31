@@ -18,8 +18,8 @@ export interface PlaygroundContext {
   selectedFileName: string
   setSelectedFileName: (fileName: string) => void
   setFiles: (files: Files) => void
-  addFile: (fileName: string) => void
-  removeFile: (fileName?: string) => void
+  addFile: (fileName?: string) => void
+  removeFile: (fileName: string) => void
   updateFileName: (oldFieldName: string, newFieldName: string) => void
 }
 
@@ -30,18 +30,30 @@ export const PlaygroundProvider = (props: PropsWithChildren) => {
   const [files, setFiles] = useState<Files>(initFiles)
   const [selectedFileName, setSelectedFileName] = useState('App.tsx')
 
-  const addFile = (name: string) => {
+  const addFile = (fileName?: string) => {
+    const name = fileName || `File${Object.keys(files).length + 1}.tsx`
+
     setFiles({
       ...files,
       [name]: {
         name,
         language: fileName2Language(name),
+        readOnly: false,
         value: '',
       },
     })
+
+    setSelectedFileName(name)
   }
 
   const removeFile = (name: string) => {
+    if (files[name]?.readOnly) return
+    if (selectedFileName === name) {
+      const keys = Object.keys(files)
+      const index = keys.indexOf(name)
+      const nextIndex = index === keys.length - 1 ? index - 1 : index + 1
+      setSelectedFileName(keys[nextIndex])
+    }
     delete files[name]
     setFiles({ ...files })
   }
