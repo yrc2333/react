@@ -1,35 +1,11 @@
-import { message } from 'antd'
 import { useEffect, useRef } from 'react'
 import { CommonComponentProps } from '../../interface'
-import { useComponetsStore } from '../../stores/components'
-import { useComponentConfigStore } from '../../stores/component-config'
-import { useDrop } from 'react-dnd'
+import { useMaterailDrop } from '../../hooks/useMaterialDrop'
 
 function Page({ children, id, name }: CommonComponentProps) {
-  const { addComponent } = useComponetsStore()
-  const { componentConfig } = useComponentConfigStore()
-
-  const [{ canDrop }, drop] = useDrop(() => ({
-    accept: ['Button', 'Container'],
-    drop: (item: { type: string }) => {
-      const props = componentConfig[item.type].defaultProps
-
-      addComponent(
-        {
-          id: new Date().getTime(),
-          name: item.type,
-          props,
-        },
-        id
-      )
-      message.success(item.type)
-    },
-    collect: (monitor) => ({
-      canDrop: monitor.canDrop(),
-    }),
-  }))
-
   const ref = useRef(null)
+  const { canDrop, drop } = useMaterailDrop(['Button', 'Container'], id)
+
   useEffect(() => {
     drop(ref)
   }, [])
