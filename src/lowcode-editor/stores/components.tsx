@@ -1,24 +1,35 @@
+import { CSSProperties } from 'react'
 import { create } from 'zustand'
 
 export interface Component {
   id: number
   name: string
   props: any
+  desc: string
+  styles?: CSSProperties
   children?: Component[]
   parentId?: number
 }
 
 interface State {
   components: Component[]
+  curComponentId?: number | null
+  curComponent: Component | null
 }
 
 interface Action {
   addComponent: (component: Component, parentId?: number) => void
   deleteComponent: (componentId: number) => void
   updateComponentProps: (componentId: number, props: any) => void
+  updateComponentStyles: (
+    componentId: number,
+    styles: CSSProperties,
+    replace?: boolean
+  ) => void
+  setCurComponentId: (componentId: number | null) => void
 }
 
-export const useComponetsStore = create<State & Action>((set, get) => ({
+export const useComponentsStore = create<State & Action>((set, get) => ({
   components: [
     {
       id: 1,
@@ -27,6 +38,13 @@ export const useComponetsStore = create<State & Action>((set, get) => ({
       desc: '页面',
     },
   ],
+  curComponentId: null,
+  curComponent: null,
+  setCurComponentId: (componentId) =>
+    set((state) => ({
+      curComponentId: componentId,
+      curComponent: getComponentById(componentId, state.components),
+    })),
   addComponent: (component, parentId) =>
     set((state) => {
       if (parentId) {
@@ -75,6 +93,22 @@ export const useComponetsStore = create<State & Action>((set, get) => ({
 
       return { components: [...state.components] }
     }),
+  updateComponentStyles: (componentId, styles, replace = false) => {
+    set((state) => {
+      const component = getComponentById(componentId, state.components)
+      if (component) {
+        if (replace) {
+          component.styles = styles
+        } else {
+          component.styles = { ...component.styles, ...styles }
+        }
+
+        return { components: [...state.components] }
+      }
+
+      return { components: [...state.components] }
+    })
+  },
 }))
 
 export function getComponentById(

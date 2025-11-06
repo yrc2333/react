@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { getComponentById, useComponetsStore } from '../../stores/components'
+import { getComponentById, useComponentsStore } from '../../stores/components'
 
 interface HoverMaskProps {
   containerClassName: string
@@ -17,7 +17,7 @@ function HoverMask({ containerClassName, componentId }: HoverMaskProps) {
     labelLeft: 0,
   })
 
-  const { components } = useComponetsStore()
+  const { components } = useComponentsStore()
 
   useEffect(() => {
     updatePosition()
@@ -98,7 +98,7 @@ function HoverMask({ containerClassName, componentId }: HoverMaskProps) {
             cursor: 'pointer',
             whiteSpace: 'nowrap',
           }}>
-          {curComponent?.name}
+          {curComponent?.desc}
         </div>
       </div>
     </>,

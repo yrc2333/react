@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { CommonComponentProps } from '../../interface'
-import { useMaterailDrop } from '../../hooks/useMaterialDrop'
+import { useMaterialDrop } from '../../hooks/useMaterialDrop'
 
-function Page({ children, id, name }: CommonComponentProps) {
+function Page({ children, id, name, styles }: CommonComponentProps) {
   const ref = useRef(null)
-  const { canDrop, drop } = useMaterailDrop(['Button', 'Container'], id)
+  const { canDrop, drop } = useMaterialDrop(['Button', 'Container'], id)
 
   useEffect(() => {
     drop(ref)
@@ -15,7 +15,7 @@ function Page({ children, id, name }: CommonComponentProps) {
       ref={ref}
       data-component-id={id}
       className="p-[20px] h-[100%] box-border"
-      style={{ border: canDrop ? '2px solid blue' : 'none' }}>
+      style={{ ...styles, border: canDrop ? '2px solid blue' : 'none' }}>
       {children}
     </div>
   )
