@@ -32,10 +32,13 @@ function SelectedMask({
     setCurComponentId,
   } = useComponentsStore()
 
+  const containerEl = useMemo(() => {
+    return document.querySelector(`.${containerClassName}`)!
+  }, [])
+
   const observer = useMemo(() => {
     const ob = new ResizeObserver(updatePosition)
-    const container = document.querySelector(`.${containerClassName}`)!
-    ob.observe(container)
+    ob.observe(containerEl)
     return ob
   }, [componentId])
 
@@ -79,10 +82,6 @@ function SelectedMask({
       labelLeft,
     })
   }
-
-  const el = useMemo(() => {
-    return document.querySelector(`.${containerClassName}`)!
-  }, [])
 
   const curSelectedComponent = useMemo(() => {
     return getComponentById(componentId, components)
@@ -170,7 +169,7 @@ function SelectedMask({
         </Space>
       </div>
     </>,
-    el
+    containerEl
   )
 }
 
