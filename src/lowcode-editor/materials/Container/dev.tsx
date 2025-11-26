@@ -1,14 +1,25 @@
 import { useRef, useEffect } from 'react'
 import { useMaterialDrop } from '../../hooks/useMaterialDrop'
 import { CommonComponentProps } from '../../interface'
+import { useDrag } from 'react-dnd'
 
-const Container = ({ id, children, styles }: CommonComponentProps) => {
+const Container = ({ id, name, children, styles }: CommonComponentProps) => {
   const ref = useRef(null)
 
   const { canDrop, drop } = useMaterialDrop(['Button', 'Container'], id)
 
+  const [_, drag] = useDrag({
+    type: name,
+    item: {
+      type: name,
+      dragType: 'move',
+      id: id,
+    },
+  })
+
   useEffect(() => {
     drop(ref)
+    drag(ref)
   }, [])
 
   return (
